@@ -19,6 +19,8 @@ Instalação
 
     Clone este repositório: git clone https://github.com/s4imu/Lendas-da-Amazonia.git
     Entre no diretório do backend: cd backend
+    Para baixar as dependências do projeto: npm install
+        
 
 Configuração
 
@@ -27,6 +29,7 @@ Configuração
 Uso
 
 O backend estará disponível em: http://localhost:8080/
+Para iniciar a API: npm start
 Contribuição
 
     Crie um fork deste repositório.
