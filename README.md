@@ -26,7 +26,7 @@ Configuração
 
 Uso
 
-O backend estará disponível em: http://localhost:5000/docs
+O backend estará disponível em: http://localhost:8080/
 Contribuição
 
     Crie um fork deste repositório.
