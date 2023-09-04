@@ -7,9 +7,18 @@ const controller = require('../controllers/controller')
 router.get('/', controller.Index)
 
 // cadastra o usuário
-router.post('/user', controller.cadastrarUsuario)
+router.post('/', controller.cadastrarUsuario)
 
-// verifica os usuários
-router.get('/user', controller.listarUsuarios)
+// listar o usuário
+router.get('/users', controller.listarUsuarios)
+
+// Encontrar algum usuário
+router.post('/users', controller.encontrarUsuario)
+
+// Deleta algum usuário por nome
+router.delete('/users', controller.deletarUsuario)
+
+// verifica o usuário é válido e loga
+router.post('/login', controller.logarUsuario)
 
 module.exports = router
