@@ -38,7 +38,7 @@ exports.cadastrarUsuario = async (req, res) => {
 exports.logarUsuario = async (req, res) => {
   try {
     let tentativaDeUsuario = await Usuarios.findOne({ email: req.body.email, senha: req.body.senha })
-    res.status(200).json({ message: `Bem vindo ${tentativaDeUsuario.nome}` })
+    res.status(200).json({ user: tentativaDeUsuario })
   } catch (e) {
     res.status(500).json({ message: "Usuário não encontrado" })
   }
