@@ -4,6 +4,24 @@ import { Model } from 'mongoose';
 import { User, UserDocument } from './schemas/user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { LoginDto } from './dto/login.dto';
+import { Validations } from 'src/utils/validations';
+import {
+  ContactEmailAreadyExistsException,
+  CourseNotFoundException,
+  EmailAreadyExistsException,
+  EnrollmentAlreadyExistsException,
+  InvalidContactEmailException,
+  InvalidEmailException,
+  InvalidEnrollmentException,
+  InvalidLinkedinURLException,
+  InvalidNameException,
+  InvalidPasswordException,
+  InvalidWhatsAppNumberException,
+  MissingFieldsException,
+  PasswordsDoNotMatchException,
+  PersonalDataInPasswordException,
+  UserNotFoundException,
+} from './utils/exceptions';
 
 @Injectable()
 export class UserService {
@@ -20,12 +38,12 @@ export class UserService {
   }
 
   async cadastrarUser(createUserDto: CreateUserDto) {
-    try {
-      await this.userModel.create(createUserDto);
-      return { status: 201, message: 'Cadastrado com sucesso!' };
-    } catch (error) {
-      throw new Error(error.message);
+    if (!Validations.validateEmail(createUserDto.email)) {
+      throw new InvalidEmailException();
     }
+
+    await this.userModel.create(createUserDto);
+    return { status: 201, message: 'Cadastrado com sucesso!' };
   }
 
   async loginUser(data: LoginDto) {
@@ -43,6 +61,14 @@ export class UserService {
     try {
       const userProcurado = await this.userModel.findOne({ nome });
       return { message: `Usuário: ${userProcurado.nome} encontrado.` };
+    } catch (e) {
+      throw new Error('Usuário não encontrado');
+    }
+  }
+
+  async findOneByEmail(email: string) {
+    try {
+      return await this.userModel.findOne({ email });
     } catch (e) {
       throw new Error('Usuário não encontrado');
     }

@@ -1,8 +1,42 @@
-import { Controller, Get, Post, Body, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
+import { IsPublic } from 'src/auth/decorators/is-public.decorator';
+import {
+  ExpiredCodeException,
+  InvalidCodeException,
+  InvalidPasswordException,
+  InvalidTokenException,
+  UsedCodeException,
+  ValidResetPasswordTokenFoundException,
+  UserNotFoundException,
+  MissingFieldsException,
+  ContactEmailAreadyExistsException as ContactEmailAlreadyExistsException,
+  CourseNotFoundException,
+  EmailAreadyExistsException as EmailAlreadyExistsException,
+  EnrollmentAlreadyExistsException,
+  InvalidEmailException,
+  InvalidEnrollmentException,
+  InvalidLinkedinURLException,
+  InvalidNameException,
+  InvalidWhatsAppNumberException,
+  PasswordsDoNotMatchException,
+  PersonalDataInPasswordException,
+  InvalidContactEmailException,
+  OldPasswordNotProvidedException,
+  WrongPasswordException,
+  InvalidStudentParametersException,
+} from 'src/user/utils/exceptions';
 
 @Controller('user')
 @ApiTags('User')
@@ -17,8 +51,15 @@ export class UserController {
 
   @ApiOperation({ description: 'Rota para criar usuário' })
   @Post('create')
+  @IsPublic()
   async cadastrarUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.cadastrarUser(createUserDto);
+    try {
+      return await this.userService.cadastrarUser(createUserDto);
+    } catch (error) {
+      if (error instanceof InvalidEmailException) {
+        throw new BadRequestException(error.message);
+      }
+    }
   }
 
   @ApiOperation({ description: 'Rota para login.' })
